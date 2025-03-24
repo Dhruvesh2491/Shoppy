@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const FeatureSchema = new mongoose.Schema(
   {
@@ -7,4 +7,6 @@ const FeatureSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Feature", FeatureSchema);
+const Feature = mongoose.model("Feature", FeatureSchema);
+
+export default Feature;

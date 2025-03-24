@@ -1,5 +1,5 @@
-const Cart = require("../../models/Cart");
-const Product = require("../../models/Product");
+import Cart from "../../models/Cart.js";
+import Product from "../../models/Product.js";
 
 const addToCart = async (req, res) => {
   try {
@@ -229,7 +229,7 @@ const deleteCartItem = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   addToCart,
   updateCartItemQty,
   deleteCartItem,

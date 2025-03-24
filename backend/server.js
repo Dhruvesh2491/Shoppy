@@ -1,50 +1,53 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const path = require("path")
-const authRouter = require("./routes/auth/auth-routes");
-const adminProductsRouter = require("./routes/admin/products-routes");
-const adminOrderRouter = require("./routes/admin/order-routes");
+import express from "express";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
 
-const shopProductsRouter = require("./routes/shop/products-routes");
-const shopCartRouter = require("./routes/shop/cart-routes");
-const shopAddressRouter = require("./routes/shop/address-routes");
-const shopOrderRouter = require("./routes/shop/order-routes");
-const shopSearchRouter = require("./routes/shop/search-routes");
-const shopReviewRouter = require("./routes/shop/review-routes");
+import authRouter from "./routes/auth/auth-routes.js";
+import adminProductsRouter from "./routes/admin/products-routes.js";
+import adminOrderRouter from "./routes/admin/order-routes.js";
 
-const commonFeatureRouter = require("./routes/common/feature-routes");
+import shopProductsRouter from "./routes/shop/products-routes.js";
+import shopCartRouter from "./routes/shop/cart-routes.js";
+import shopAddressRouter from "./routes/shop/address-routes.js";
+import shopOrderRouter from "./routes/shop/order-routes.js";
+import shopSearchRouter from "./routes/shop/search-routes.js";
+import shopReviewRouter from "./routes/shop/review-routes.js";
+import commonFeatureRouter from "./routes/common/feature-routes.js";
+
+
+dotenv.config({ path: "./.env" });
+
+const port = process.env.PORT
+const MONGO = process.env.MONGO_URI;
 
 mongoose
-  .connect("mongodb+srv://dhruvesh:Dhruvesh2491@cluster0.wjrfe7x.mongodb.net/", {
-    dbName: "Shoppy",
-  })
+  .connect(MONGO, { dbName: "Shoppy" })
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.log(error));
 
 const app = express();
 const PORT = 5000;
 
-const _dirname = path.resolve();
+// Resolve __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(
   cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "DELETE", "PUT"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Cache-Control",
-      "Expires",
-      "Pragma",
-    ],
+    allowedHeaders: ["Content-Type", "Authorization", "Cache-Control", "Expires", "Pragma"],
     credentials: true,
   })
 );
 
 app.use(cookieParser());
 app.use(express.json());
+
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
@@ -58,9 +61,9 @@ app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
 
-app.use(express.static(path.join(_dirname, "/frontend/dist")));
+app.use(express.static(path.join(__dirname, "frontend/dist")));
 app.get("*", (_, res) => {
-  res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
 });
 
-app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+app.listen(port, () => console.log(`Server is now running on port ${PORT}`));
